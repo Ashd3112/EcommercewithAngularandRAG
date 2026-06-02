@@ -48,6 +48,8 @@ export class App implements OnInit {
     'Show the cheapest product',
     'Which product is rated highest?'
   ]);
+  showContinuePrompt = signal<boolean>(false);
+  showChipsAlways = signal<boolean>(false);
 
   // Computed state
   categories = computed(() => {
@@ -183,7 +185,28 @@ export class App implements OnInit {
 
   // Chat/RAG operations
   toggleChat() {
-    this.isChatOpen.update(val => !val);
+    const nextState = !this.isChatOpen();
+    this.isChatOpen.set(nextState);
+    if (!nextState) {
+      this.resetChatSession();
+    }
+  }
+
+  closeChat() {
+    this.isChatOpen.set(false);
+    this.resetChatSession();
+  }
+
+  resetChatSession() {
+    this.chatMessages.set([
+      {
+        sender: 'bot',
+        text: "Hello! I am Aura, your AI shopping assistant. Ask me questions about our product features, recommendation guides, or budget searches (e.g. 'Show me gadgets under $100' or 'recommend a lighting setting')."
+      }
+    ]);
+    this.showContinuePrompt.set(false);
+    this.showChipsAlways.set(false);
+    this.isTyping.set(false);
   }
 
   selectSuggestionChip(chipText: string) {
@@ -194,6 +217,9 @@ export class App implements OnInit {
   sendChatMessage() {
     const text = this.chatInput().trim();
     if (!text) return;
+
+    this.showContinuePrompt.set(false);
+    this.showChipsAlways.set(false);
 
     // Add user message
     this.chatMessages.update(msgs => [...msgs, { sender: 'user', text }]);
@@ -209,6 +235,7 @@ export class App implements OnInit {
           text: res.response,
           retrievedProducts: res.retrievedProducts
         }]);
+        this.showContinuePrompt.set(true);
         this.scrollToBottom();
       },
       error: (err) => {
@@ -220,10 +247,26 @@ export class App implements OnInit {
             sender: 'bot',
             text: "Sorry, I am having trouble reaching the AI service right now. Please verify the .NET backend is running on http://localhost:5000."
           }]);
+          this.showContinuePrompt.set(true);
           this.scrollToBottom();
         }, 1000);
       }
     });
+  }
+
+  respondToContinue(continueFlow: boolean) {
+    this.showContinuePrompt.set(false);
+    if (continueFlow) {
+      this.showChipsAlways.set(true);
+      this.scrollToBottom();
+    } else {
+      this.showChipsAlways.set(false);
+      this.chatMessages.update(msgs => [...msgs, {
+        sender: 'bot',
+        text: 'Thank you for shopping with us! Let me know if you need anything else.'
+      }]);
+      this.scrollToBottom();
+    }
   }
 
   // Helper method to format text to Markdown-like HTML

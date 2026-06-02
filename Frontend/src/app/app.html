@@ -207,7 +207,7 @@
           <span>Store Assistant</span>
         </div>
       </div>
-      <button class="close-btn" style="background: rgba(255,255,255,0.1); color: white;" (click)="isChatOpen.set(false)">✕</button>
+      <button class="close-btn" style="background: rgba(255,255,255,0.1); color: white;" (click)="closeChat()">✕</button>
     </div>
 
     <!-- Messages Container -->
@@ -237,7 +237,7 @@
       </div>
       
       <!-- Suggested Chips -->
-      <div *ngIf="chatMessages().length === 1 && !isTyping()" class="suggested-chips-container">
+      <div *ngIf="(chatMessages().length === 1 || showChipsAlways()) && !isTyping() && !showContinuePrompt()" class="suggested-chips-container">
         <span class="suggested-chips-title">Try asking:</span>
         <div class="suggested-chips">
           <button 
@@ -247,6 +247,15 @@
           >
             {{ chip }}
           </button>
+        </div>
+      </div>
+
+      <!-- Continue Prompt -->
+      <div *ngIf="showContinuePrompt() && !isTyping()" class="continue-prompt-container">
+        <p class="continue-prompt-text">Do you want to continue?</p>
+        <div class="continue-prompt-buttons">
+          <button class="continue-btn yes" (click)="respondToContinue(true)">Yes</button>
+          <button class="continue-btn no" (click)="respondToContinue(false)">No</button>
         </div>
       </div>
 
