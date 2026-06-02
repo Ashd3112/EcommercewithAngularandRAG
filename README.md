@@ -105,3 +105,6 @@ Open your browser to [http://localhost:4200](http://localhost:4200) to explore t
 - **API RAG Coordinator**: [RagsService.cs](file:///d:/EcommercewithAngularandRAG/Backend/EcommerceApi/Services/RagsService.cs)
 - **Local TF-IDF Vectorizer**: [SemanticSearchService.cs](file:///d:/EcommercewithAngularandRAG/Backend/EcommerceApi/Services/SemanticSearchService.cs)
 - **Database Seeder**: [EcommerceDbContext.cs](file:///d:/EcommercewithAngularandRAG/Backend/EcommerceApi/Data/EcommerceDbContext.cs)
+  <img width="1919" height="1010" alt="image" src="https://github.com/user-attachments/assets/a8d522de-667f-4240-946c-2b32ba3c6c5f" />
+  <img width="476" height="665" alt="image" src="https://github.com/user-attachments/assets/3a086afb-dfb8-45a2-ad5b-f4a624280d25" />
+
