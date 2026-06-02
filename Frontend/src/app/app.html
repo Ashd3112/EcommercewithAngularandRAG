@@ -1,0 +1,287 @@
+<div class="app-container">
+  <!-- Header -->
+  <header class="app-header glass-panel" style="padding: 16px 24px; margin-bottom: 24px;">
+    <div class="brand">
+      <div class="brand-logo">
+        <!-- Modern Shopping Bag Icon -->
+        <svg viewBox="0 0 24 24">
+          <path d="M19,6H16A4,4 0 0,0 12,2A4,4 0 0,0 8,6H5A2,2 0 0,0 3,8V20A2,2 0 0,0 5,22H19A2,2 0 0,0 21,20V8A2,2 0 0,0 19,6M12,4A2,2 0 0,1 14,6H10A2,2 0 0,1 12,4M19,20H5V8H19V20M12,12A2,2 0 0,1 10,10H8A4,4 0 0,0 12,14A4,4 0 0,0 16,10H14A2,2 0 0,1 12,12Z" />
+        </svg>
+      </div>
+      <div>
+        <h1>AuraStore</h1>
+        <p style="font-size: 11px; color: var(--color-text-muted); margin-top: -2px;">Vector Search & RAG Enabled</p>
+      </div>
+    </div>
+
+    <!-- Search box -->
+    <div style="flex-grow: 1; max-width: 480px; margin: 0 32px; display: flex; position: relative;">
+      <input 
+        type="text" 
+        class="search-input" 
+        placeholder="Search products semantically..." 
+        [(ngModel)]="searchQuery"
+        (keyup.enter)="onSearch()"
+      />
+      <button *ngIf="searchQuery()" (click)="clearSearch()" class="close-btn" style="position: absolute; right: 60px; top: 10px; width: 26px; height: 26px; font-size: 10px;">✕</button>
+      <button class="btn-primary" style="border-radius: 0 10px 10px 0; padding: 12px 20px; margin-left: -5px;" (click)="onSearch()">
+        Search
+      </button>
+    </div>
+
+    <div class="header-actions">
+      <div class="cart-trigger" (click)="isCartOpen.set(true)">
+        <!-- Shopping cart icon -->
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="white">
+          <path d="M17,18C15.89,18 15,18.89 15,20C15,21.11 15.89,22 17,22C18.11,22 19,21.11 19,20C19,18.89 18.11,18 17,18M7,18C5.89,18 5,18.89 5,20C5,21.11 5.89,22 7,22C8.11,22 9,21.11 9,20C9,18.89 8.11,18 7,18M7.2,14.63L7.17,14.75C7.17,14.89 7.28,15 7.42,15H19V17H7.42C5.97,17 4.79,15.82 4.79,14.37C4.79,13.9 4.91,13.46 5.12,13.08L6.47,10.63L3,3H1V1H4.3L5.2,3H20C20.55,3 21,3.45 21,4C21,4.17 20.95,4.34 20.88,4.5L17.64,10.97C17.29,11.58 16.64,12 15.93,12H8.1L7.2,14.63Z" />
+        </svg>
+        <span class="cart-count" *ngIf="cartCount() > 0">{{ cartCount() }}</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Core Layout -->
+  <div class="main-layout">
+    <!-- Sidebar Filters -->
+    <aside class="filters-sidebar glass-panel">
+      <div class="filter-section">
+        <h3>Categories</h3>
+        <div class="category-list">
+          <button 
+            *ngFor="let cat of categories()"
+            (click)="selectCategory(cat)"
+            class="category-btn"
+            [class.active]="selectedCategory() === cat"
+          >
+            {{ cat }}
+          </button>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <h3>Price Range</h3>
+        <div class="price-range-container">
+          <input 
+            type="range" 
+            class="price-slider" 
+            min="10" 
+            max="300" 
+            [(ngModel)]="maxPriceFilter"
+          />
+          <div class="price-labels">
+            <span>$10</span>
+            <span style="color: var(--color-primary); font-weight: 700;">Under ${{ maxPriceFilter() }}</span>
+            <span>$300</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-section" style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border-color);">
+        <h4 style="font-size: 13px; color: white; margin-bottom: 8px;">Need Shopping Advice?</h4>
+        <p style="font-size: 11.5px; color: var(--color-text-muted); line-height: 1.5; margin-bottom: 16px;">
+          Ask Aura, our AI assistant, to help search matching products, recommend gadgets, or analyze reviews.
+        </p>
+        <button class="btn-primary" style="width: 100%; justify-content: center; font-size: 13px;" (click)="isChatOpen.set(true)">
+          Chat with Aura AI
+        </button>
+      </div>
+    </aside>
+
+    <!-- Products Catalog Grid -->
+    <main>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h2 style="font-size: 20px; font-weight: 700;">
+          {{ selectedCategory() }} Products ({{ filteredProducts().length }})
+        </h2>
+        <span style="font-size: 13px; color: var(--color-text-muted);" *ngIf="selectedCategory() !== 'All'">
+          Filtering by Category: {{ selectedCategory() }}
+        </span>
+      </div>
+
+      <!-- No Products Found -->
+      <div *ngIf="filteredProducts().length === 0" class="glass-panel" style="padding: 60px; text-align: center;">
+        <p style="font-size: 16px; color: var(--color-text-muted); margin-bottom: 16px;">No products match your filters.</p>
+        <button class="btn-secondary" (click)="selectedCategory.set('All'); maxPriceFilter.set(300); clearSearch()">Reset Filters</button>
+      </div>
+
+      <!-- Grid -->
+      <div class="products-grid">
+        <div 
+          *ngFor="let product of filteredProducts()" 
+          class="product-card glass-panel"
+        >
+          <div class="product-image-wrapper">
+            <span class="category-badge">{{ product.category }}</span>
+            <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
+          </div>
+
+          <div class="product-info">
+            <h3 class="product-title">{{ product.name }}</h3>
+            <p class="product-desc">{{ product.description }}</p>
+            
+            <!-- Similarity Score if returned from semantic search -->
+            <div *ngIf="product.similarityScore" style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--color-primary); font-weight: 700; margin-bottom: 12px; background: rgba(139, 92, 246, 0.1); width: fit-content; padding: 2px 8px; border-radius: 4px;">
+              Similarity Score: {{ product.similarityScore }}
+            </div>
+
+            <div class="product-footer">
+              <span class="price">${{ product.price }}</span>
+              <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+                <div class="rating">
+                  <span style="font-weight: 700; color: white; margin-right: 4px;">{{ product.rating }}</span> ★
+                </div>
+                <button class="btn-primary" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;" (click)="addToCart(product)">
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Shopping Cart Side Drawer -->
+<div class="cart-drawer-overlay" [class.active]="isCartOpen()" (click)="isCartOpen.set(false)">
+  <div class="cart-drawer" (click)="$event.stopPropagation()">
+    <div class="cart-header">
+      <h2 style="font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+        Shopping Cart 
+        <span style="font-size: 14px; font-weight: 400; color: var(--color-text-muted);">({{ cartCount() }} items)</span>
+      </h2>
+      <button class="close-btn" (click)="isCartOpen.set(false)">✕</button>
+    </div>
+
+    <!-- Empty Cart -->
+    <div *ngIf="cart().length === 0" class="cart-items" style="justify-content: center; align-items: center; text-align: center;">
+      <p style="color: var(--color-text-muted); margin-bottom: 16px;">Your cart is empty.</p>
+      <button class="btn-primary" (click)="isCartOpen.set(false)">Continue Shopping</button>
+    </div>
+
+    <!-- Cart items list -->
+    <div *ngIf="cart().length > 0" class="cart-items">
+      <div *ngFor="let item of cart()" class="cart-item">
+        <img [src]="item.product.imageUrl" [alt]="item.product.name" class="cart-item-img" />
+        <div class="cart-item-details">
+          <h4 class="cart-item-name">{{ item.product.name }}</h4>
+          <span class="cart-item-price">${{ item.product.price }} each</span>
+          <div class="quantity-controls">
+            <button class="qty-btn" (click)="updateQuantity(item.product.id, -1)">-</button>
+            <span style="font-weight: 600; font-size: 13px;">{{ item.quantity }}</span>
+            <button class="qty-btn" (click)="updateQuantity(item.product.id, 1)">+</button>
+            <button (click)="removeFromCart(item.product.id)" style="background: none; border: none; color: var(--color-accent); font-size: 11px; font-weight: 600; margin-left: auto; cursor: pointer;">Remove</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <div *ngIf="cart().length > 0" class="cart-footer">
+      <div class="cart-summary-row">
+        <span>Subtotal</span>
+        <span style="font-size: 20px; font-weight: 700; color: white;">${{ cartTotal() | number:'1.2-2' }}</span>
+      </div>
+      <p style="font-size: 11.5px; color: var(--color-text-muted); margin-bottom: 16px;">Shipping & taxes computed at checkout.</p>
+      <button class="btn-primary" style="width: 100%; justify-content: center; padding: 14px 20px; font-size: 15px;" (click)="checkout()">
+        Proceed to Checkout
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Floating RAG AI Chat Widget -->
+<div class="chat-widget-container">
+  <!-- Chat Window -->
+  <div *ngIf="isChatOpen()" class="chat-window glass-panel">
+    <div class="chat-window-header">
+      <div class="chat-bot-info">
+        <div class="bot-avatar">
+          <!-- Robot Icon -->
+          <svg viewBox="0 0 24 24">
+            <path d="M12,2A2,2 0 0,1 14,4C14,4.74 13.6,5.39 13,5.73V7H18A2,2 0 0,1 20,9V19A2,2 0 0,1 18,21H6A2,2 0 0,1 4,19V9A2,2 0 0,1 6,7H11V5.73C10.4,5.39 10,4.74 10,4A2,2 0 0,1 12,2M7.5,13A1.5,1.5 0 0,0 6,14.5A1.5,1.5 0 0,0 7.5,16A1.5,1.5 0 0,0 9,14.5A1.5,1.5 0 0,0 7.5,13M16.5,13A1.5,1.5 0 0,0 15,14.5A1.5,1.5 0 0,0 16.5,16A1.5,1.5 0 0,0 18,14.5A1.5,1.5 0 0,0 16.5,13M12,17C9.24,17 7,18.34 7,20H17C17,18.34 14.76,17 12,17Z" />
+          </svg>
+        </div>
+        <div class="chat-title">
+          <h4>Aura AI</h4>
+          <span>Store Assistant</span>
+        </div>
+      </div>
+      <button class="close-btn" style="background: rgba(255,255,255,0.1); color: white;" (click)="isChatOpen.set(false)">✕</button>
+    </div>
+
+    <!-- Messages Container -->
+    <div class="chat-messages">
+      <div *ngFor="let msg of chatMessages()" class="message" [class.user]="msg.sender === 'user'" [class.bot]="msg.sender === 'bot'">
+        <div class="msg-bubble" [innerHTML]="formatMessage(msg.text)"></div>
+        
+        <!-- Display SQL Server RAG Retrieved Context Visual Cards -->
+        <div *ngIf="msg.retrievedProducts && msg.retrievedProducts.length > 0" style="width: 100%;">
+          <div class="retrieved-context-title">
+            🔍 Retrieved from SQL Database
+          </div>
+          <div class="retrieved-list">
+            <div *ngFor="let item of msg.retrievedProducts" class="retrieved-item-card">
+              <img [src]="item.imageUrl" [alt]="item.name" class="retrieved-img" />
+              <div class="retrieved-info">
+                <div class="retrieved-name">{{ item.name }}</div>
+                <div class="retrieved-meta">
+                  <span>${{ item.price }}</span>
+                  <span style="color: var(--color-primary); font-weight: 700;">Score: {{ item.similarityScore }}</span>
+                </div>
+              </div>
+              <button class="retrieved-add-btn" (click)="addToCart(item)">+ Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Suggested Chips -->
+      <div *ngIf="chatMessages().length === 1 && !isTyping()" class="suggested-chips-container">
+        <span class="suggested-chips-title">Try asking:</span>
+        <div class="suggested-chips">
+          <button 
+            *ngFor="let chip of suggestedChips()" 
+            class="chip-btn" 
+            (click)="selectSuggestionChip(chip)"
+          >
+            {{ chip }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Typing Indicator -->
+      <div *ngIf="isTyping()" class="message bot">
+        <div class="typing-indicator">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input Area -->
+    <div class="chat-input-area">
+      <textarea 
+        class="chat-textarea" 
+        placeholder="Type your message..." 
+        [(ngModel)]="chatInput"
+        (keyup.enter)="sendChatMessage()"
+      ></textarea>
+      <button class="chat-send-btn" (click)="sendChatMessage()">
+        <!-- Send icon -->
+        <svg viewBox="0 0 24 24">
+          <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Bubble Button -->
+  <div class="chat-bubble" (click)="toggleChat()">
+    <!-- Bot Speech Icon -->
+    <svg viewBox="0 0 24 24">
+      <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A1.5,1.5 0 0,0 10.5,7.5A1.5,1.5 0 0,0 12,9A1.5,1.5 0 0,0 13.5,7.5A1.5,1.5 0 0,0 12,6M12,11A1.5,1.5 0 0,0 10.5,12.5A1.5,1.5 0 0,0 12,14A1.5,1.5 0 0,0 13.5,12.5A1.5,1.5 0 0,0 12,11M12,16A1.5,1.5 0 0,0 10.5,17.5A1.5,1.5 0 0,0 12,19A1.5,1.5 0 0,0 13.5,17.5A1.5,1.5 0 0,0 12,16Z" />
+    </svg>
+  </div>
+</div>
