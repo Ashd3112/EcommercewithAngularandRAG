@@ -133,7 +133,16 @@ dotnet run --project Gateway/Gateway.csproj
 - **Frontend Component logic**: [app.ts](file:///d:/EcommercewithAngularandRAG/Frontend/src/app/app.ts)
 - **Frontend Template UI**: [app.html](file:///d:/EcommercewithAngularandRAG/Frontend/src/app/app.html)
 - **Design & Styles**: [app.css](file:///d:/EcommercewithAngularandRAG/Frontend/src/app/app.css)
+<<<<<<< HEAD
 - **API Gateway Config**: [appsettings.json (Gateway)](file:///d:/EcommercewithAngularandRAG/Backend/Gateway/appsettings.json)
 - **API RAG Coordinator**: [RagsService.cs](file:///d:/EcommercewithAngularandRAG/Backend/ChatService/Services/RagsService.cs)
 - **Local TF-IDF Vectorizer**: [SemanticSearchService.cs](file:///d:/EcommercewithAngularandRAG/Backend/ProductService/Services/SemanticSearchService.cs)
 - **Database Seeder**: [EcommerceDbContext.cs](file:///d:/EcommercewithAngularandRAG/Backend/ProductService/Data/EcommerceDbContext.cs)
+=======
+- **API RAG Coordinator**: [RagsService.cs](file:///d:/EcommercewithAngularandRAG/Backend/EcommerceApi/Services/RagsService.cs)
+- **Local TF-IDF Vectorizer**: [SemanticSearchService.cs](file:///d:/EcommercewithAngularandRAG/Backend/EcommerceApi/Services/SemanticSearchService.cs)
+- **Database Seeder**: [EcommerceDbContext.cs](file:///d:/EcommercewithAngularandRAG/Backend/EcommerceApi/Data/EcommerceDbContext.cs)
+  <img width="1919" height="1010" alt="image" src="https://github.com/user-attachments/assets/a8d522de-667f-4240-946c-2b32ba3c6c5f" />
+  <img width="476" height="665" alt="image" src="https://github.com/user-attachments/assets/3a086afb-dfb8-45a2-ad5b-f4a624280d25" />
+
+>>>>>>> 9f79c560d9ef3671daec9c0c1908d450ea30d207
