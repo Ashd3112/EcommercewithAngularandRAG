@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # AuraStore 🛍️ - E-Commerce with Angular and Microservices RAG Chatbot
 
 Welcome to **AuraStore**, a modern, state-of-the-art e-commerce application powered by **Angular**, **.NET 10**, **SQL Server**, and **Retrieval-Augmented Generation (RAG)** using **Ollama**.
@@ -144,5 +145,7 @@ dotnet run --project Gateway/Gateway.csproj
 - **Database Seeder**: [EcommerceDbContext.cs](file:///d:/EcommercewithAngularandRAG/Backend/EcommerceApi/Data/EcommerceDbContext.cs)
   <img width="1919" height="1010" alt="image" src="https://github.com/user-attachments/assets/a8d522de-667f-4240-946c-2b32ba3c6c5f" />
   <img width="476" height="665" alt="image" src="https://github.com/user-attachments/assets/3a086afb-dfb8-45a2-ad5b-f4a624280d25" />
+=======
+>>>>>>> f84c4474b72c0e0ff1f9a579e51f84dfe007c6cd
 
 >>>>>>> 9f79c560d9ef3671daec9c0c1908d450ea30d207
