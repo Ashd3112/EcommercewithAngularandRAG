@@ -299,7 +299,7 @@
   border: 1px solid var(--border-color);
   padding: 12px 20px;
   border-radius: 12px;
-  color: white;
+  color: var(--color-text);
   font-family: var(--font-body);
   outline: none;
   font-size: 14px;

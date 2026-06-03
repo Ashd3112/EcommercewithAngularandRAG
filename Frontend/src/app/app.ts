@@ -245,7 +245,7 @@ export class App implements OnInit {
         setTimeout(() => {
           this.chatMessages.update(msgs => [...msgs, {
             sender: 'bot',
-            text: "Sorry, I am having trouble reaching the AI service right now. Please verify the .NET backend is running on http://localhost:5000."
+            text: "Sorry, I am having trouble reaching the AI service right now. Please verify the .NET backend is running on http://localhost:5194."
           }]);
           this.showContinuePrompt.set(true);
           this.scrollToBottom();

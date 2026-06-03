@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "d+R47Q6R20Q=",
+  "success": true,
+  "projectFilePath": "D:\\EcommercewithAngularandRAG\\Backend\\Gateway\\Gateway.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Ashwini.Desale\\.nuget\\packages\\system.io.hashing\\8.0.0\\system.io.hashing.8.0.0.nupkg.sha512",
+    "C:\\Users\\Ashwini.Desale\\.nuget\\packages\\yarp.reverseproxy\\2.2.0\\yarp.reverseproxy.2.2.0.nupkg.sha512"
+  ],
+  "logs": []
+}
