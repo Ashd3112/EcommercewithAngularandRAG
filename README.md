@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # AuraStore 🛍️ - E-Commerce with Angular and Microservices RAG Chatbot
 
 Welcome to **AuraStore**, a modern, state-of-the-art e-commerce application powered by **Angular**, **.NET 10**, **SQL Server**, and **Retrieval-Augmented Generation (RAG)** using **Ollama**.
